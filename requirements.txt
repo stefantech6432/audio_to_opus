@@ -1,0 +1,9 @@
+# Audio to Opus Converter Requirements
+# This tool uses ffmpeg for audio conversion, which must be installed separately
+
+# No Python package dependencies required - uses only standard library
+# However, ffmpeg must be installed on your system:
+#
+# Ubuntu/Debian: sudo apt-get install ffmpeg
+# macOS: brew install ffmpeg
+# Windows: Download from https://ffmpeg.org/download.html
