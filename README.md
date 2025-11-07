@@ -1,6 +1,22 @@
 # Audio to Opus Converter
 
-A simple and efficient Python-based audio converter that converts various audio formats to Opus format using ffmpeg.
+A Python-based audio converter that converts various audio formats to Opus format using ffmpeg. Available in two versions: a simple standalone version and an optimized parallel-processing version.
+
+## Available Versions
+
+### Version 1: `audio_to_opus.py` (Simple)
+- ✅ **Zero Python dependencies** (uses only standard library)
+- ✅ Simple and straightforward
+- ✅ Best for quick conversions and simple use cases
+- ⚠️ Sequential processing (one file at a time)
+
+### Version 2: `audio_to_opus_v2.py` (Optimized) ⭐ **Recommended**
+- ✅ **Parallel processing** for much faster batch conversions
+- ✅ **File size comparison** and compression statistics
+- ✅ **Performance timing** to measure speed gains
+- ✅ Multi-core CPU utilization
+- ✅ Detailed conversion summary
+- 📦 Requires `ffmpeg-python` package
 
 ## Features
 
@@ -9,12 +25,17 @@ A simple and efficient Python-based audio converter that converts various audio 
 - **Configurable Bitrate**: Set custom bitrate from low to high quality
 - **Batch Processing**: Convert multiple files at once
 - **Simple CLI**: Easy-to-use command-line interface
-- **No Python Dependencies**: Uses only Python standard library
+- **Parallel Processing** (v2 only): Utilize all CPU cores for faster conversions
 
 ## Requirements
 
+### System Requirements
 - **Python 3.6+**
 - **ffmpeg** (must be installed separately)
+
+### Python Package Requirements
+- **Version 1** (`audio_to_opus.py`): No additional packages needed
+- **Version 2** (`audio_to_opus_v2.py`): Requires `ffmpeg-python`
 
 ### Installing ffmpeg
 
@@ -40,64 +61,91 @@ git clone <repository-url>
 cd audio_to_opus
 ```
 
-2. Make the script executable (Linux/macOS):
+2. Install Python dependencies (for v2 only):
+```bash
+pip install -r requirements.txt
+```
+
+3. Make the scripts executable (Linux/macOS):
 ```bash
 chmod +x audio_to_opus.py
+chmod +x audio_to_opus_v2.py
 ```
 
 ## Usage
 
-### Basic Usage
+### Quick Start
 
-Convert a single file:
+**Version 1 (Simple):**
 ```bash
 python audio_to_opus.py input.mp3
 ```
 
-### Advanced Options
-
+**Version 2 (Optimized, Recommended):**
 ```bash
-python audio_to_opus.py [OPTIONS] INPUT_FILES...
+python audio_to_opus_v2.py input.mp3
 ```
 
-**Options:**
+### Command-Line Options
+
+Both versions support similar options:
+
+```bash
+python audio_to_opus_v2.py [OPTIONS] INPUT_FILES...
+```
+
+**Common Options:**
 - `-o, --output-dir DIR` : Specify output directory (default: same as input)
 - `-b, --bitrate KBPS` : Set target bitrate in kbps (default: 128)
 - `--cbr` : Use constant bitrate instead of variable bitrate
 - `--version` : Show version information
 - `-h, --help` : Show help message
 
+**Version 2 Exclusive Options:**
+- `-j, --jobs N` : Number of parallel workers (default: CPU count)
+- `--delete-original` : Delete original files after successful conversion
+
 ### Examples
 
 **Convert with custom bitrate:**
 ```bash
-python audio_to_opus.py song.mp3 -b 192
+python audio_to_opus_v2.py song.mp3 -b 192
 ```
 
-**Convert multiple files:**
+**Convert multiple files (parallel processing in v2):**
 ```bash
-python audio_to_opus.py song1.mp3 song2.wav song3.flac
+python audio_to_opus_v2.py song1.mp3 song2.wav song3.flac
 ```
 
-**Convert all FLAC files in current directory:**
+**Convert all FLAC files with 8 parallel workers:**
 ```bash
-python audio_to_opus.py *.flac
+python audio_to_opus_v2.py *.flac -j 8
 ```
 
 **Specify output directory:**
 ```bash
-python audio_to_opus.py *.mp3 -o ./converted/
+python audio_to_opus_v2.py *.mp3 -o ./converted/
 ```
 
-**Use constant bitrate (CBR):**
+**High-quality conversion with 4 workers:**
 ```bash
-python audio_to_opus.py input.wav -b 96 --cbr
+python audio_to_opus_v2.py *.flac -b 256 -j 4
 ```
 
-**High-quality conversion:**
+**Convert and delete originals (use with caution!):**
 ```bash
-python audio_to_opus.py input.flac -b 256
+python audio_to_opus_v2.py *.mp3 --delete-original
 ```
+
+### Performance Comparison
+
+For batch conversions, **Version 2 is significantly faster**:
+
+**Example: Converting 100 MP3 files**
+- Version 1 (sequential): ~10 minutes
+- Version 2 (8 cores): ~2-3 minutes
+
+The exact speedup depends on your CPU core count and file sizes.
 
 ## Supported Input Formats
 
@@ -120,6 +168,21 @@ python audio_to_opus.py input.flac -b 256
 - **160 kbps**: Very good quality
 - **192 kbps**: High quality
 - **256 kbps**: Very high quality, near-transparent
+
+## Which Version Should I Use?
+
+**Use Version 2 (`audio_to_opus_v2.py`) if:**
+- ✅ You're converting multiple files or large batches
+- ✅ You want the fastest conversion times
+- ✅ You want to see file size comparisons and statistics
+- ✅ You have a multi-core CPU
+- ✅ You can install Python packages (`ffmpeg-python`)
+
+**Use Version 1 (`audio_to_opus.py`) if:**
+- ✅ You need a zero-dependency solution
+- ✅ You're converting just a few files
+- ✅ You're running in a restricted environment
+- ✅ You prefer simplicity over speed
 
 ## About Opus Format
 
